@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: simple-chat
+
+  server:
+    port: 8080
+
+  data:
+    mongodb:
+      uthentication-database: admin
+      username: user
+      password: user
+      database: simple-chat-db
+      port: 27017
+      host: localhost

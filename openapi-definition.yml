@@ -52,7 +52,7 @@ paths:
       - Users
       summary: Get all users
       description: Fetch all users in the sistem
-      operationId: geAlltUsers
+      operationId: geAllUsers
       security:
       - basicAuth: []
       responses:

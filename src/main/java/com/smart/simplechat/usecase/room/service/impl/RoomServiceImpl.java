@@ -1,13 +1,16 @@
 package com.smart.simplechat.usecase.room.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
-import com.smart.simplechat.common.exception.ElementAlreadyExist;
+import com.smart.simplechat.common.exception.ElementAlreadyExistException;
 import com.smart.simplechat.usecase.room.model.Room;
 import com.smart.simplechat.usecase.room.repository.RoomRepository;
 import com.smart.simplechat.usecase.room.service.RoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.kafka.config.TopicBuilder;
+import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -17,16 +20,18 @@ public class RoomServiceImpl implements RoomService {
 
   private final RoomRepository roomRepository;
 
+  private final KafkaAdmin kafkaAdmin;
+
   @Override
   public void createRoom(Room room) {
     log.info("[RoomService] Create new room: {}", room);
 
     if (roomRepository.findByName(room.getName()).isPresent()) {
-      throw new ElementAlreadyExist("ROOM", room.getName());
+      throw new ElementAlreadyExistException("ROOM", room.getName());
     }
 
-    var roomWithTopic = room.toBuilder().topicId("todo").build();
-
+    kafkaAdmin.createOrModifyTopics(TopicBuilder.name(room.getName()).partitions(1).replicas(1).build());
+    var roomWithTopic = room.toBuilder().topicId(room.getName()).build();
     roomRepository.createRoom(roomWithTopic);
   }
 
@@ -34,5 +39,11 @@ public class RoomServiceImpl implements RoomService {
   public List<Room> getAllRooms() {
     log.info("[RoomService] Get all rooms");
     return roomRepository.getAllRooms();
+  }
+
+  @Override
+  public Optional<Room> findById(String id) {
+    log.info("[RoomService] Find by id: {}", id);
+    return roomRepository.findById(id);
   }
 }

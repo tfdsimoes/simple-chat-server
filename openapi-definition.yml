@@ -126,7 +126,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/message"
+              $ref: "#/components/schemas/messageRequest"
       responses:
         '200':
           description: OK
@@ -165,7 +165,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/message"
+                  $ref: "#/components/schemas/messageAnswer"
         '400':
           description: Bad Request
           content:
@@ -203,7 +203,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/message"
+                  $ref: "#/components/schemas/messageAnswer"
         '400':
           description: Bad Request
           content:
@@ -299,6 +299,12 @@ paths:
         required: true
         schema:
           type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/messageRequest"
       responses:
         '200':
           description: OK
@@ -337,7 +343,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/message"
+                  $ref: "#/components/schemas/messageAnswer"
         '400':
           description: Bad Request
           content:
@@ -357,6 +363,7 @@ paths:
       - RoomMessages
       summary: Real time messages room
       description: Get the messages in real time from the room
+      operationId: getRealtimeMessages
       security:
       - basicAuth: []
       parameters:
@@ -374,7 +381,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/message"
+                  $ref: "#/components/schemas/messageAnswer"
         '400':
           description: Bad Request
           content:
@@ -407,7 +414,16 @@ components:
           type: string
           description: Name of the room
 
-    message:
+    messageRequest:
+      type: object
+      required:
+      - content
+      properties:
+        content:
+          type: string
+          description: Content of the message
+
+    messageAnswer:
       type: object
       required:
       - from

@@ -5,6 +5,9 @@ spring:
   server:
     port: 8080
 
+  kafka:
+    bootstrap-server: localhost:9092
+
   data:
     mongodb:
       uthentication-database: admin
@@ -13,3 +16,5 @@ spring:
       database: simple-chat-db
       port: 27017
       host: localhost
+
+

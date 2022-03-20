@@ -35,6 +35,13 @@ public class RoomRepositoryImpl implements RoomRepository {
 
   @Override
   public Optional<Room> findByName(String name) {
-    return Optional.empty();
+    log.info("[RoomRepository] Find by name");
+    return roomCrud.findByName(name).map(roomDocumentMapper::toModel);
+  }
+
+  @Override
+  public Optional<Room> findById(String id) {
+    log.info("[RoomRepository] Find by id");
+    return roomCrud.findById(id).map(roomDocumentMapper::toModel);
   }
 }

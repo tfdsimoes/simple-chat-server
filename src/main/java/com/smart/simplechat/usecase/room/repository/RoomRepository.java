@@ -12,4 +12,6 @@ public interface RoomRepository {
   List<Room> getAllRooms();
 
   Optional<Room> findByName(String name);
+
+  Optional<Room> findById(String id);
 }

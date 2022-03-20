@@ -3,14 +3,13 @@ package com.smart.simplechat.common.service.impl;
 import java.util.List;
 import java.util.Optional;
 
-import com.smart.simplechat.common.exception.ElementAlreadyExist;
+import com.smart.simplechat.common.exception.ElementAlreadyExistException;
 import com.smart.simplechat.common.model.User;
 import com.smart.simplechat.common.repo.user.UserRepository;
 import com.smart.simplechat.common.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ public class UserServiceImpl implements UserService {
     log.info("[UserService] Create new User: {}", user);
 
     if (userRepository.findByName(user.getName()).isPresent()) {
-      throw new ElementAlreadyExist("USER", user.getName());
+      throw new ElementAlreadyExistException("USER", user.getName());
     }
 
     userRepository.createUser(user);

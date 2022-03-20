@@ -21,6 +21,7 @@
 		<openapi-generator.version>5.4.0</openapi-generator.version>
 		<jackson-nullable.version>0.2.2</jackson-nullable.version>
 		<assertj.version>3.22.0</assertj.version>
+		<kafka.version>2.8.1</kafka.version>
 	</properties>
 
 	<dependencies>
@@ -36,6 +37,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+			<version>${kafka.version}</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.mapstruct</groupId>

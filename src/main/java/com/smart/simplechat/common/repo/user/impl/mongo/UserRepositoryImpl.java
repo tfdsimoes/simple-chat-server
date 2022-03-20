@@ -17,30 +17,30 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class UserRepositoryImpl implements UserRepository {
 
-  private final UserCrud crud;
+  private final UserCrud userCrud;
 
-  private final UserDocumentMapper mapper;
+  private final UserDocumentMapper userDocumentMapper;
 
   private final PasswordEncoder encoder;
 
   @Override
   public void createUser(User user) {
     log.info("[UserRepository] Create user: {}", user);
-    var userDocument = mapper.toDocument(user);
+    var userDocument = userDocumentMapper.toDocument(user);
     userDocument.setPassword(encoder.encode(userDocument.getPassword()));
-    crud.save(userDocument);
+    userCrud.save(userDocument);
   }
 
   @Override
   public Optional<User> findByName(String name) {
     log.info("[UserRepository] Find by name: {}" + name);
-    return crud.findByName(name).map(mapper::toModel);
+    return userCrud.findByName(name).map(userDocumentMapper::toModel);
   }
 
   @Override
   public List<User> getAllUsers() {
     log.info("[UserRepository] Get all users");
-    var usersDocument = crud.findAll();
-    return mapper.toModels(usersDocument);
+    var usersDocument = userCrud.findAll();
+    return userDocumentMapper.toModels(usersDocument);
   }
 }

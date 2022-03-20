@@ -63,7 +63,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: string
+                  $ref: "#/components/schemas/userAnswer"
 
   /rest/v1/users/login:
     post:
@@ -231,7 +231,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/room"
+              $ref: "#/components/schemas/roomRequest"
       responses:
         '201':
           description: Created
@@ -269,7 +269,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/room"
+                  $ref: "#/components/schemas/roomAnswer"
         '400':
           description: Bad Request
           content:
@@ -390,9 +390,19 @@ paths:
 
 components:
   schemas:
-    room:
+    roomRequest:
       type: object
       properties:
+        name:
+          type: string
+          description: Name of the room
+
+    roomAnswer:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the room
         name:
           type: string
           description: Name of the room
@@ -426,6 +436,16 @@ components:
         password:
           type: string
           description: Password of the user
+
+    userAnswer:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the user
+        name:
+          type: string
+          description: Name of the user
 
     commonError:
       type: object

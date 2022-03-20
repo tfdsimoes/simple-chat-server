@@ -1,12 +1,11 @@
 package com.smart.simplechat.usecase.user.rest.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.smart.simplechat.common.controller.RestExceptionHandler;
-import com.smart.simplechat.common.model.User;
 import com.smart.simplechat.common.service.UserService;
 import com.smart.simplechat.rest.controller.api.UsersApi;
+import com.smart.simplechat.rest.controller.model.UserAnswerDTO;
 import com.smart.simplechat.rest.controller.model.UserRequestDTO;
 import com.smart.simplechat.usecase.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
@@ -32,13 +31,9 @@ public class UserController extends RestExceptionHandler implements UsersApi {
   }
 
   @Override
-  public ResponseEntity<List<String>> geAllUsers() {
+  public ResponseEntity<List<UserAnswerDTO>> geAllUsers() {
     log.info("[UserController] Get all users");
-
-    var users = userService.getAllUsers();
-    var usernames = users.stream().map(User::getUsername).collect(Collectors.toList());
-
-    return ResponseEntity.ok(usernames);
+    return ResponseEntity.ok(userMapper.toDTOs(userService.getAllUsers()));
   }
 
   @Override

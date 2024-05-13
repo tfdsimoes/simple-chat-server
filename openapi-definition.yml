@@ -1,0 +1,491 @@
+openapi: "3.0.1"
+info:
+  version: 0.1.0
+  title: Simple Chat Server
+  description: API Rest for simple chat server
+  contact:
+    name: Tiago Simoes
+    email: tfdsimoes@gmail.com
+
+servers:
+- url: http://localhost:8080
+  description: Localhost
+
+tags:
+- name: Users
+- name: UserMessages
+- name: Rooms
+- name: RoomMessages
+
+paths:
+  /rest/v1/users:
+    post:
+      tags:
+      - Users
+      summary: Create an user
+      description: Create a new user
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userRequest"
+
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+    get:
+      tags:
+      - Users
+      summary: Get all users
+      description: Fetch all users in the sistem
+      operationId: geAllUsers
+      security:
+      - basicAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/userAnswer"
+
+  /rest/v1/users/login:
+    post:
+      tags:
+      - Users
+      summary: Login
+      description: Login the user in the system
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/userRequest"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+
+  /rest/v1/users/logout:
+    post:
+      tags:
+      - Users
+      summary: Logout
+      description: Logout the user in the system
+      operationId: logoutUser
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+
+  /rest/v1/users/{id}/messages:
+    post:
+      tags:
+      - UserMessages
+      summary: Send direct message
+      description: Send a direct message to an user
+      operationId: sentDirectMessage
+      security:
+      - basicAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: Id of the user
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/messageRequest"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+        '401':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+    get:
+      tags:
+      - UserMessages
+      summary: Get direct message
+      description: Get all direct messages with the user
+      operationId: getDirectMessages
+      security:
+      - basicAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: Id of the user
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/messageAnswer"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+        '401':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+
+  /rest/v1/users/{id}/messages/subscribe:
+    get:
+      tags:
+      - UserMessages
+      summary: Real time direct messages
+      description: Receive in real time the direct messages
+      operationId: getRealtimeDirectMessages
+      security:
+      - basicAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: Id of the user
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/messageAnswer"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+        '401':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+
+  /rest/v1/rooms:
+    post:
+      tags:
+      - Rooms
+      summary: Create room
+      description: Create a new room in the system
+      operationId: createRoom
+      security:
+      - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/roomRequest"
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+        '401':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+    get:
+      tags:
+      - Rooms
+      summary: Get all rooms
+      description: Get all the rooms in the system
+      operationId: getAllRooms
+      security:
+      - basicAuth: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/roomAnswer"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+        '401':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+
+  /rest/v1/rooms/{id}/messages:
+    post:
+      tags:
+      - RoomMessages
+      summary: Send a message room
+      description: Send a new message to the room
+      operationId: sendMessageRoom
+      security:
+      - basicAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: Id of the room
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/messageRequest"
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+        '401':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+    get:
+      tags:
+      - RoomMessages
+      summary: Get all messages room
+      description: Get all messages sent to the room
+      operationId: getAllMessagesRoom
+      security:
+      - basicAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: Id of the room
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/messageAnswer"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+        '401':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+
+  /rest/v1/rooms/{id}/subscribe:
+    get:
+      tags:
+      - RoomMessages
+      summary: Real time messages room
+      description: Get the messages in real time from the room
+      operationId: getRealtimeMessages
+      security:
+      - basicAuth: []
+      parameters:
+      - name: id
+        in: path
+        description: Id of the room
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/messageAnswer"
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+        '401':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/commonError"
+
+components:
+  schemas:
+    roomRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the room
+
+    roomAnswer:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the room
+        name:
+          type: string
+          description: Name of the room
+
+    messageRequest:
+      type: object
+      required:
+      - content
+      properties:
+        content:
+          type: string
+          description: Content of the message
+
+    messageAnswer:
+      type: object
+      required:
+      - from
+      - timeStamp
+      - content
+      properties:
+        from:
+          type: string
+          description: Who sent the message
+        timeStamp:
+          type: string
+          description: When the message was sent
+        content:
+          type: string
+          description: Content of the message
+
+    userRequest:
+      type: object
+      required:
+      - name
+      - password
+      properties:
+        name:
+          type: string
+          description: Name of the user
+        password:
+          type: string
+          description: Password of the user
+
+    userAnswer:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the user
+        name:
+          type: string
+          description: Name of the user
+
+    commonError:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+          description: Error identifier
+        description:
+          type: string
+          description: Title of the error
+        detail:
+          type: string
+          description: Detail of the error
+        key:
+          type: string
+          description: Internationalizacion key message
+        params:
+          type: array
+          description: Params for the Internationalizacion key message
+          items:
+            type: string
+
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
